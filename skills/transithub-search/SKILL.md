@@ -24,9 +24,10 @@ The `transithub` MCP server exposes:
   `requires_polling: true` or `has_all_results: false`, meaning more supplier
   results may still be arriving.
 - **get_ride_option** — get a frozen quote ("prebooking") snapshot for one
-  specific ride option, by `session_id` (the search_id) and `ride_id`.
-  Useful right before handing off to a booking flow, to confirm the ride is
-  still available and the price hasn't changed.
+  specific ride option, by `session_id` (the search_id) and `ride_id` (this
+  is the ride's `booking_token` from a search result — confirmed by live
+  testing). Useful right before handing off to a booking flow, to confirm
+  the ride is still available and the price hasn't changed.
 - **list_operators** — list every transfer operator (supplier) the partner
   account is connected to, independent of any specific search.
 

@@ -143,7 +143,7 @@ server.registerTool(
       "Look up the details of one specific ride option from a search, by session/search id and ride id. Returns a frozen prebooking snapshot (price, availability, expiry) that can be used to proceed to booking outside of this plugin. This does not create a booking.",
     inputSchema: {
       session_id: z.string().describe("The search_id (session id) the ride option belongs to"),
-      ride_id: z.string().describe("The ride option's id, as returned in the search results"),
+      ride_id: z.string().describe("The ride option's booking_token, as returned in the search results"),
       pickup_time: z
         .string()
         .optional()
