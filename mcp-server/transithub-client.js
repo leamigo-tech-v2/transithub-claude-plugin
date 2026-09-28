@@ -1,10 +1,17 @@
 const DEFAULT_BASE_URL = "https://api.transithub.io";
 
 class TransitHubError extends Error {
-  constructor(message, status, body) {
+  constructor(status, body) {
+    // Live API errors consistently look like:
+    // { "error": { "code": "...", "message": "...", "details"?: "...", "timestamp": "..." } }
+    const apiError = body && typeof body === "object" ? body.error : undefined;
+    const message = apiError?.message
+      ? `${apiError.code ? `[${apiError.code}] ` : ""}${apiError.message}${apiError.details ? ` (${apiError.details})` : ""}`
+      : `TransitHub API request failed with HTTP ${status}`;
     super(message);
     this.name = "TransitHubError";
     this.status = status;
+    this.code = apiError?.code;
     this.body = body;
   }
 }
@@ -48,11 +55,7 @@ async function request(method, path, { query, body, language } = {}) {
   }
 
   if (!res.ok) {
-    throw new TransitHubError(
-      `TransitHub API request failed: ${method} ${path} -> ${res.status}`,
-      res.status,
-      parsed
-    );
+    throw new TransitHubError(res.status, parsed);
   }
 
   return parsed;

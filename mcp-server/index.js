@@ -75,12 +75,7 @@ function errorResult(err) {
   if (err instanceof TransitHubError) {
     return {
       isError: true,
-      content: [
-        {
-          type: "text",
-          text: `TransitHub API error (HTTP ${err.status}): ${JSON.stringify(err.body ?? err.message)}`,
-        },
-      ],
+      content: [{ type: "text", text: `TransitHub API error (HTTP ${err.status}): ${err.message}` }],
     };
   }
   return { isError: true, content: [{ type: "text", text: err.message || String(err) }] };

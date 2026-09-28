@@ -40,6 +40,15 @@ The `transithub` MCP server exposes:
   `HH:mm`.
 - `return_date` and `return_time` are required when `journey_type` is
   `return`.
+- The API rejects a pickup less than 24 hours from now
+  (`TRANSFER_SEARCH_DATE_001`). If the user asks for a transfer "today" or
+  "tomorrow morning", check whether that's within 24 hours and warn them
+  before searching, rather than letting the call fail.
+- A search with no available rides is a normal, successful response
+  (`status: false`, `results: []`) — not an error, and it also has no
+  `metadata` (so no `search_id` is issued for it). Tell the user plainly
+  that no options were found for that route/date; don't treat it as a
+  failure or retry blindly.
 - Prices in raw API responses are in minor currency units (e.g. cents); the
   tool's summary already converts these to a human-readable amount using the
   response's `precision` field.
