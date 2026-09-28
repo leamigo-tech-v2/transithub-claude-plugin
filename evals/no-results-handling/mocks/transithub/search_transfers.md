@@ -1,0 +1,1 @@
+{"status":false,"results":[],"request":{"pickup":{"address":"Test Pickup","latitude":0,"longitude":0},"destination":{"address":"Test Destination","latitude":0,"longitude":0},"passengers":1,"pickup_date":"2026-11-01","pickup_time":"10:00","journey_type":"oneway","partner_id":13}}

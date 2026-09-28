@@ -1,0 +1,171 @@
+{
+  "tools": [
+    {
+      "name": "search_transfers",
+      "title": "Search ground airport transfers",
+      "description": "Search available ground transfer (airport transfer / point-to-point ride) options worldwide via TransitHub. Returns a list of ride options with vehicle, provider, and price, plus a search_id you can use with get_search_results, and booking_token / ride ids you can use with get_ride_option. Search results only \u2014 this tool does not create a booking.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "pickup": {
+            "type": "object",
+            "properties": {
+              "address": {
+                "type": "string",
+                "description": "Human-readable pickup or drop-off address"
+              },
+              "latitude": {
+                "type": "number",
+                "description": "Latitude in decimal degrees"
+              },
+              "longitude": {
+                "type": "number",
+                "description": "Longitude in decimal degrees"
+              }
+            },
+            "required": [
+              "address",
+              "latitude",
+              "longitude"
+            ],
+            "additionalProperties": false,
+            "description": "Pickup location"
+          },
+          "destination": {
+            "type": "object",
+            "properties": {
+              "address": {
+                "$ref": "#/properties/pickup/properties/address"
+              },
+              "latitude": {
+                "$ref": "#/properties/pickup/properties/latitude"
+              },
+              "longitude": {
+                "$ref": "#/properties/pickup/properties/longitude"
+              }
+            },
+            "required": [
+              "address",
+              "latitude",
+              "longitude"
+            ],
+            "additionalProperties": false,
+            "description": "Destination (drop-off) location"
+          },
+          "passengers": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Number of passengers"
+          },
+          "pickup_date": {
+            "type": "string",
+            "description": "Pickup date, YYYY-MM-DD"
+          },
+          "pickup_time": {
+            "type": "string",
+            "description": "Pickup time, 24-hour HH:mm"
+          },
+          "journey_type": {
+            "type": "string",
+            "enum": [
+              "oneway",
+              "return"
+            ],
+            "description": "Type of journey"
+          },
+          "return_date": {
+            "type": "string",
+            "description": "Return date YYYY-MM-DD (required if journey_type is return)"
+          },
+          "return_time": {
+            "type": "string",
+            "description": "Return time HH:mm (required if journey_type is return)"
+          },
+          "language": {
+            "type": "string",
+            "description": "BCP-47 language code for localized content, e.g. en, fr"
+          }
+        },
+        "required": [
+          "pickup",
+          "destination",
+          "passengers",
+          "pickup_date",
+          "pickup_time",
+          "journey_type"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "get_search_results",
+      "title": "Get full search results by search_id",
+      "description": "Fetch the full (possibly updated) results for a previous search_transfers call, using the search_id from its metadata. Use this to poll when requires_polling was true or has_all_results was false.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "search_id": {
+            "type": "string",
+            "description": "The search_id returned in a previous search_transfers response's metadata"
+          }
+        },
+        "required": [
+          "search_id"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "get_ride_option",
+      "title": "Get ride option details (prebooking quote)",
+      "description": "Look up the details of one specific ride option from a search, by session/search id and ride id. Returns a frozen prebooking snapshot (price, availability, expiry) that can be used to proceed to booking outside of this plugin. This does not create a booking.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "description": "The search_id (session id) the ride option belongs to"
+          },
+          "ride_id": {
+            "type": "string",
+            "description": "The ride option's booking_token, as returned in the search results"
+          },
+          "pickup_time": {
+            "type": "string",
+            "description": "Optional override pickup time HH:mm; defaults to the originally searched pickup_time"
+          }
+        },
+        "required": [
+          "session_id",
+          "ride_id"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "list_operators",
+      "title": "List connected transfer operators",
+      "description": "List every ground transfer operator (supplier) this TransitHub partner account is connected to, independent of any live search. Useful for partner-side configuration, e.g. building an allow/deny list.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    }
+  ]
+}

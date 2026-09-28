@@ -1,10 +1,21 @@
 {
   "name": "transithub-search",
   "version": "0.1.0",
+  "displayName": "TransitHub Transfer Search",
   "description": "Search global ground airport transfers via the TransitHub Partner API (search module only).",
   "author": {
     "name": "TransitHub"
   },
+  "homepage": "https://github.com/leamigo-tech-v2/transithub-claude-plugin",
+  "repository": "https://github.com/leamigo-tech-v2/transithub-claude-plugin",
+  "license": "MIT",
+  "keywords": [
+    "transithub",
+    "airport-transfer",
+    "ground-transportation",
+    "travel",
+    "search"
+  ],
   "mcpServers": {
     "transithub": {
       "command": "node",

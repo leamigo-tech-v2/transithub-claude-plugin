@@ -24,11 +24,17 @@ implemented.
 ## Setup
 
 1. Get a TransitHub Partner API key (`x-api-key`).
-2. Install the plugin in Claude Code (add this repo as a plugin
-   source/marketplace, then install `transithub-search`).
+2. Add this repo as a plugin marketplace and install the plugin:
+
+   ```
+   /plugin marketplace add leamigo-tech-v2/transithub-claude-plugin
+   /plugin install transithub-search@transithub-search-marketplace
+   ```
+
 3. When enabling the plugin, Claude Code prompts for its configuration —
    enter your API key there (stored as the plugin's `api_key` user config,
-   marked sensitive; never hardcode it in a file). Optionally override
+   marked sensitive, kept in Claude Code's credential store rather than
+   plaintext settings; never hardcode it in a file). Optionally override
    `api_base_url` (defaults to `https://api.transithub.io`), e.g. for a
    staging environment.
 
@@ -41,10 +47,40 @@ standalone with those two environment variables exported yourself.
 ## Layout
 
 - `.claude-plugin/plugin.json` — plugin manifest, registers the bundled MCP server.
+- `.claude-plugin/marketplace.json` — makes this repo installable directly via
+  `/plugin marketplace add`.
 - `mcp-server/` — Node.js MCP server exposing the TransitHub search module as tools.
   - `transithub-client.js` — thin fetch-based client for the four search endpoints.
   - `index.js` — MCP server entrypoint, defines the tools above.
 - `skills/transithub-search/SKILL.md` — skill describing how/when to use the search tools.
+- `evals/` — `claude plugin eval` test suite (see below).
+
+## Testing
+
+Before any change ships, run:
+
+```
+claude plugin validate .claude-plugin/plugin.json --strict
+claude plugin validate .claude-plugin/marketplace.json --strict
+claude plugin eval . --trust-plugin --model sonnet --judge-model haiku --no-publish
+```
+
+`claude plugin validate` checks manifest structure (this is what a marketplace
+listing's automated check enforces). `claude plugin eval` runs the plugin
+against real prompts with mocked TransitHub API responses (recorded from live
+API calls — see `evals/mocks/transithub/`) and grades the transcripts:
+
+| Case | What it checks |
+| --- | --- |
+| `search-and-summarize` | Calls `search_transfers` and reports the mocked ride options accurately (no fabricated prices/vehicles) |
+| `no-results-handling` | Treats an empty result (`status: false`) as a normal "no options found" answer, not an error |
+| `list-operators` | Calls `list_operators` and reports the connected suppliers accurately |
+| `booking-out-of-scope` | Refuses to fabricate a booking confirmation when asked to "book" a ride, since this plugin is search-only |
+
+All four currently pass (score 1.0). Note: the acting model matters — Haiku
+struggled to invoke the plugin's MCP tool reliably in testing, so evals (and
+real usage where tool-calling reliability matters) should target Sonnet or
+above.
 
 ## Notes
 
