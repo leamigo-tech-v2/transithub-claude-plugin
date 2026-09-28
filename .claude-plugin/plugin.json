@@ -10,9 +10,24 @@
       "command": "node",
       "args": ["${CLAUDE_PLUGIN_ROOT}/mcp-server/index.js"],
       "env": {
-        "TRANSITHUB_API_KEY": "${TRANSITHUB_API_KEY}",
-        "TRANSITHUB_API_BASE_URL": "${TRANSITHUB_API_BASE_URL:-https://api.transithub.io}"
+        "TRANSITHUB_API_KEY": "${user_config.api_key}",
+        "TRANSITHUB_API_BASE_URL": "${user_config.api_base_url}"
       }
+    }
+  },
+  "userConfig": {
+    "api_key": {
+      "type": "string",
+      "title": "TransitHub API Key",
+      "description": "Your TransitHub Partner API key (sent as the x-api-key header)",
+      "sensitive": true,
+      "required": true
+    },
+    "api_base_url": {
+      "type": "string",
+      "title": "API Base URL",
+      "description": "TransitHub API base URL",
+      "default": "https://api.transithub.io"
     }
   }
 }
