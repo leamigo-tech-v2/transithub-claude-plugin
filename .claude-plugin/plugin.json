@@ -1,0 +1,18 @@
+{
+  "name": "transithub-search",
+  "version": "0.1.0",
+  "description": "Search global ground airport transfers via the TransitHub Partner API (search module only).",
+  "author": {
+    "name": "TransitHub"
+  },
+  "mcpServers": {
+    "transithub": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/mcp-server/index.js"],
+      "env": {
+        "TRANSITHUB_API_KEY": "${TRANSITHUB_API_KEY}",
+        "TRANSITHUB_API_BASE_URL": "${TRANSITHUB_API_BASE_URL:-https://api.transithub.io}"
+      }
+    }
+  }
+}
