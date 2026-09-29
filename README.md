@@ -1,7 +1,5 @@
 # transithub-search (Claude Code plugin)
 
-<img src="assets/icon.png" alt="TransitHub icon" width="80" height="80" />
-
 A Claude Code plugin that lets Claude search global ground airport transfers
 through the TransitHub Partner API — **search/discovery module only**. It
 never books, cancels, or amends a reservation.
@@ -56,10 +54,6 @@ standalone with those two environment variables exported yourself.
   - `index.js` — MCP server entrypoint, defines the tools above.
 - `skills/transithub-search/SKILL.md` — skill describing how/when to use the search tools.
 - `evals/` — `claude plugin eval` test suite (see below).
-- `assets/icon.png` — square icon (cropped from TransitHub's logo mark) for use when
-  submitting the plugin to a marketplace listing. Neither `plugin.json` nor
-  `marketplace.json` currently has an icon field, so this isn't wired into the
-  manifest — it's just kept here for reference/reuse.
 
 ## Testing
 
@@ -95,3 +89,10 @@ above.
   `precision` field.
 - `search_transfers` results are session-scoped and short-lived — see
   `metadata.expires_at` in the response.
+- **Marketplace icon**: neither `plugin.json` nor `marketplace.json` has an
+  icon field, and shipping a binary image/font file inside a plugin's own
+  source triggers a manual reviewer hold on directories that scan for it
+  (since a plugin's code can read any file in its own repo). So the icon
+  (a square crop of TransitHub's logo mark) is kept out of this repo and
+  uploaded directly wherever a marketplace listing's submission form asks
+  for one, instead of being committed here.
